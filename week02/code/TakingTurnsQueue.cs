@@ -41,16 +41,16 @@ public class TakingTurnsQueue
         {
             Person person = _people.Dequeue();
 
-            if (person.Turns <= 0)
-            {
+            if (person.Turns <= 0) // if the name still has turns, it will be enqueued
+            {                      
                 _people.Enqueue(person);
             }
 
             else
             {
-                person.Turns--;
-                if (person.Turns > 0)
-                {
+                person.Turns--; // the name with finite turns will be dequeued if its turn runs out.
+                if (person.Turns > 0) // this condition is applicable for names that has
+                {                 // 0 or less turns initially. Which would be infinite in turns
                     _people.Enqueue(person);
                 }
             }
