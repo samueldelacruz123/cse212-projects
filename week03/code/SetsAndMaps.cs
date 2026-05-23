@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 
 public static class SetsAndMaps
@@ -21,8 +22,22 @@ public static class SetsAndMaps
     /// <param name="words">An array of 2-character words (lowercase, no duplicates)</param>
     public static string[] FindPairs(string[] words)
     {
-        // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        var wordSet = new HashSet<string>(words);
+        var results = new List<string>();
+
+        foreach (var word in words)
+        {
+            string reversedWord = $"{word[1]}{word[0]}";
+
+            if (wordSet.Contains(reversedWord)
+                && word != reversedWord)
+            {
+                results.Add($"{word} & {reversedWord}");
+                wordSet.Remove(word);
+            }
+        }
+
+        return results.ToArray();
     }
 
     /// <summary>
@@ -42,7 +57,12 @@ public static class SetsAndMaps
         foreach (var line in File.ReadLines(filename))
         {
             var fields = line.Split(",");
-            // TODO Problem 2 - ADD YOUR CODE HERE
+            var degree = fields[3];
+
+            if (degrees.ContainsKey(degree))
+                degrees[degree] ++;
+            else
+                degrees[degree] = 1;
         }
 
         return degrees;
@@ -66,8 +86,36 @@ public static class SetsAndMaps
     /// </summary>
     public static bool IsAnagram(string word1, string word2)
     {
-        // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        word1 = word1.ToLower().Replace(" ", "");
+        word2 = word2.ToLower().Replace(" ", "");
+
+        if (word1.Length != word2.Length)
+            return false;
+
+        var anagramSet = new Dictionary<char, int>();
+
+        foreach (char letter in word1)
+            {  
+                  //updade dictionary count
+                if (anagramSet.ContainsKey(letter))
+                    anagramSet[letter] ++;
+                else
+                    anagramSet[letter] = 1;
+            }
+
+        foreach (char letter in word2)
+            //if a letter is not in the dictionary -> false
+            {
+                if (!anagramSet.ContainsKey(letter))
+                    return false;
+                
+                anagramSet[letter] --;
+
+                if (anagramSet[letter] < 0)
+                    return false;
+            }
+
+        return true;
     }
 
     /// <summary>
